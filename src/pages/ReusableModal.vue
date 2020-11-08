@@ -16,7 +16,7 @@ import { ref } from "vue";
 export default {
   components: { Modal },
   setup() {
-    const isModalOpen = ref(true);
+    const isModalOpen = ref(false);
 
     return { isModalOpen };
   },
