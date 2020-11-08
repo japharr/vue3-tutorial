@@ -31,11 +31,41 @@
 </template>
 
 <script>
+import { onMounted, ref, computed } from "vue";
+
 export default {
+  setup() {
+    const heroNameRef = ref("");
+    const heroName = ref("");
+    const heroes = ref([
+      { name: "Flash" },
+      { name: "SuperMan" },
+      { name: "Arrow" },
+      { name: "Batman" },
+    ]);
+
+    const heroCount = computed(() => {
+      return heroes.value.length;
+    });
+
+    onMounted(() => {
+      heroNameRef.value.focus();
+    });
+
+    function addHero() {
+      if (heroName.value !== "") {
+        heroes.value.unshift({ name: heroName.value });
+        heroName.value = "";
+      }
+    }
+
+    function removeHero(index) {
+      heroes.value = heroes.value.filter((heror, i) => i !== index);
+    }
+
+    return { heroes, heroName, heroNameRef, heroCount, addHero, removeHero };
+  },
   computed: {
-    heroCount() {
-      return this.heroes.length;
-    },
     // fullname: {
     //   get() {
     //     return `${this.fname} ${this.lname}`;
@@ -46,31 +76,6 @@ export default {
     //     this.lname = names[1];
     //   }
     // }
-  },
-  methods: {
-    addHero() {
-      if (this.heroName !== "") {
-        this.heroes.unshift({ name: this.heroName });
-        this.heroName = "";
-      }
-    },
-    removeHero(index) {
-      this.heroes = this.heroes.filter((heror, i) => i !== index);
-    },
-  },
-  mounted() {
-    this.$refs.heroNameRef.focus();
-  },
-  data() {
-    return {
-      heroName: "",
-      heroes: [
-        { name: "Flash" },
-        { name: "SuperMan" },
-        { name: "Arrow" },
-        { name: "Batman" },
-      ],
-    };
   },
 };
 </script>
