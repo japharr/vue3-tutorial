@@ -6,6 +6,7 @@ import Slider from "./pages/Slider";
 import Home from "./pages/Home";
 import Calculator from "./pages/Calculator";
 import ReusableModal from "./pages/ReusableModal";
+import Chat from "./pages/Chat";
 
 const routes = [
   { path: "/", component: Home },
@@ -15,6 +16,7 @@ const routes = [
   { path: "/slider", component: Slider },
   { path: "/calculator", component: Calculator },
   { path: "/reusable-modal", component: ReusableModal },
+  { path: "/chat", component: Chat },
 ];
 
 const router = createRouter({
