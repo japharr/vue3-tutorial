@@ -10,7 +10,7 @@
       >{{ link.title }}</router-link
     >
     <button v-if="isLoggedIn" class="mx-2" @click="logout()">Logout</button>
-    <button v-else class="mx-2" @click="$emit('open-login-modal')">
+    <button v-else class="mx-2" @click="openLogin()">
       Login
     </button>
   </nav>
@@ -19,7 +19,7 @@
 <script>
 import firebase from "../utilities/firebase";
 export default {
-  props: { isLoggedIn: { type: Boolean, required: true } },
+  //props: { isLoggedIn: { type: Boolean, required: true } },
   data() {
     return {
       links: [
@@ -45,6 +45,14 @@ export default {
           // An error happened.
           console.log(e);
         });
+    },
+    openLogin() {
+      this.$store.commit("setLoginModal", true);
+    },
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.state.isLoggedIn;
     },
   },
 };
