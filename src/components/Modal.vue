@@ -21,6 +21,7 @@
 
 <script>
 export default {
+  emits: ["close"],
   setup(_, { emit }) {
     function close() {
       emit("close");

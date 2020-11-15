@@ -6,6 +6,7 @@ import Slider from "./pages/Slider";
 import Home from "./pages/Home";
 import Calculator from "./pages/Calculator";
 import ReusableModal from "./pages/ReusableModal";
+import UserCrud from "./pages/UserCrud";
 import Chat from "./pages/Chat";
 import store from "./store/index";
 
@@ -29,6 +30,7 @@ const routes = [
       }
     },
   },
+  { path: "/user-crud", component: UserCrud },
 ];
 
 const router = createRouter({
