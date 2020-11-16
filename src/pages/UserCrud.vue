@@ -3,6 +3,13 @@
     <div class="m-auto">
       <h1 class="text-2xl text-center">User Crud</h1>
       <div class="mt-10">
+        <Create
+          :isModalOpen="isModalOpen"
+          :form="state.form"
+          @add-new-user="addNewUser"
+          @update-user="updateUser"
+          @close-modal="isModalOpen = false"
+        />
         <button
           class="px-2 py-1 rounded border my-4"
           @click="isModalOpen = true"
@@ -74,69 +81,20 @@
       </div>
     </div>
   </section>
-  <teleport to="body">
-    <Modal v-if="isModalOpen" @close="isModalOpen = false">
-      <template #title>Add New User</template>
-      <template #body>
-        <form @submit.prevent="submit()">
-          <div class="p-2">
-            <label for="">Name</label>
-            <input
-              class="w-full p-2 rounded border"
-              type="text"
-              placeholder="User name"
-              v-model="state.form.name"
-            />
-          </div>
-          <div class="p-2">
-            <label for="">Email</label>
-            <input
-              class="w-full p-2 rounded border"
-              type="text"
-              placeholder="User Email"
-              v-model="state.form.email"
-            />
-          </div>
-          <div class="p-2">
-            <label for="">Avatar</label>
-            <input
-              class="w-full p-2 rounded border"
-              type="text"
-              placeholder="Avatar URL"
-              v-model="state.form.avatar"
-            />
-          </div>
-          <div class="p-2">
-            <input
-              class="w-full p-2 rounded border hover:bg-gray-300"
-              type="submit"
-              value="create"
-              placeholder="Avatar URL"
-            />
-          </div>
-        </form>
-      </template>
-    </Modal>
-  </teleport>
 </template>
 
 <script>
 import { onMounted, reactive, ref } from "vue";
 import axios from "../plugins/axios";
-import Modal from "../components/Modal";
+import Create from "../components/UserCrud/Create";
 
 export default {
-  components: { Modal },
+  components: { Create },
   setup() {
     const isModalOpen = ref(false);
     const state = reactive({
       users: [],
-      form: {
-        name: "",
-        email: "",
-        avatar: "",
-        id: "",
-      },
+      form: {},
     });
 
     onMounted(async () => {
@@ -152,27 +110,6 @@ export default {
     async function prev() {
       const { data } = await axios.get(`/users?page=1`);
       state.users = data;
-    }
-
-    async function submit() {
-      if (state.form.id) {
-        await axios.put(`/users/${state.form.id}`, state.form);
-
-        const index = state.users.findIndex((obj) => obj._id === state.form.id);
-        state.users[index].name = state.form.name;
-        state.users[index].email = state.form.email;
-        state.users[index].avatar = state.form.avatar;
-      } else {
-        const { data } = await axios.post("/users", state.form);
-        console.log(data);
-        state.users.push(data);
-      }
-
-      state.form.email = "";
-      state.form.name = "";
-      state.form.avatar = "";
-
-      isModalOpen.value = false;
     }
 
     async function deleteUser(id) {
@@ -197,7 +134,27 @@ export default {
       isModalOpen.value = true;
     }
 
-    return { state, next, prev, isModalOpen, submit, deleteUser, editUser };
+    function addNewUser(data) {
+      state.users.push(data);
+    }
+
+    function updateUser(data) {
+      const index = state.users.findIndex((obj) => obj._id === data.id);
+      state.users[index].name = data.name;
+      state.users[index].email = data.email;
+      state.users[index].avatar = data.avatar;
+    }
+
+    return {
+      state,
+      next,
+      prev,
+      deleteUser,
+      editUser,
+      addNewUser,
+      updateUser,
+      isModalOpen,
+    };
   },
 };
 </script>
